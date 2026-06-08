@@ -1,76 +1,125 @@
-# qbridge — Quantum Computing Bridge (C++/Python)
+```markdown
+# QBridge — 量子計算橋接框架
 
-[![C++](https://img.shields.io/badge/C++-17-%2300599C?logo=c%2B%2B)](https://isocpp.org/)
-[![Python](https://img.shields.io/badge/Python-3-%233776AB?logo=python)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Python](https://img.shields.io/badge/python-3.9%2B-brightgreen)
+![Status](https://img.shields.io/badge/status-active--development-orange)
+![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen)
 
-A hybrid C++/Python quantum computing simulator and educational tool. The C++ core implements high-performance quantum state simulation, while Python provides the CLI, visualization, and interactive teaching interface.
+**QBridge** 是一個專為量子計算生態設計的橋接框架，旨在簡化不同量子後端（如 Qiskit、Cirq、Braket 等）之間的轉換與協作。透過統一的抽象層，開發者可以無縫切換模擬器與真實量子硬體，並輕鬆整合經典計算與量子流程。
 
-## Architecture
+---
 
-| Layer | Language | Responsibility |
-|-------|----------|----------------|
-| Core Simulator | C++17 | State vector, quantum gate application, measurement, Bell states, Deutsch-Jozsa / Grover's algorithm demos |
-| Frontend / CLI | Python | Circuit description parsing, calling C++ engine, amplitude/probability visualization, result reporting |
+## ✨ 功能特色
 
-## Key Capabilities
+- **多後端支援**：抽象化量子電路與後端介面，支援 Qiskit、Cirq、Amazon Braket 等主流框架。
+- **統一電路表示**：將不同格式的量子電路轉換為 QBridge 內部表示，便於分析、優化與轉譯。
+- **混合計算橋接**：整合經典邏輯與量子處理單元（QPU），支援 hybrid 工作流程。
+- **輕量無侵入**：無需修改既有程式碼即可導入，適合逐步遷移。
+- **擴充套件機制**：開放 Plugin 架構，便於社群貢獻新的後端轉接器。
 
-- **State Vector Simulation** — Full complex amplitude representation
-- **Quantum Gates** — Hadamard, Pauli (X/Y/Z), CNOT, phase gates
-- **Measurement** — Probabilistic state collapse simulation
-- **Bell States** — Entanglement demonstration
-- **Deutsch-Jozsa Algorithm** — Oracle-based quantum algorithm demo
-- **Grover's Search** — Quantum search algorithm demonstration
-- **Visualization** — Amplitude and probability distribution plots
+---
 
-## Tech Stack
+## 📦 安裝
 
-| Component | Technology |
-|-----------|------------|
-| Core Engine | C++17 |
-| CLI / Viz | Python 3 |
-| Math | Eigen (C++), NumPy (Python) |
-| Plotting | Matplotlib |
-
-## Installation & Usage
-
-### C++ Core
+### 使用 pip
 
 ```bash
-mkdir build && cd build
-cmake ..
-make
-./qbridge_core --circuit examples/bell_state.json
+pip install qbridge
 ```
 
-### Python CLI
+### 從原始碼安裝
 
 ```bash
-pip install numpy matplotlib
-python qbridge_cli.py --circuit examples/deutsch_jozsa.json --visualize
+git clone https://github.com/yourusername/qbridge.git
+cd qbridge
+pip install -e .
 ```
 
-### Quick Demo
+> 建議使用虛擬環境（如 `venv` 或 `conda`）進行隔離安裝。
 
-```bash
-# Bell state |Φ⁺⟩ = (|00⟩ + |11⟩)/√2
-echo '{"gates": [{"type": "H", "target": 0}, {"type": "CNOT", "control": 0, "target": 1}]}' > /tmp/circuit.json
-./build/qbridge_core --circuit /tmp/circuit.json
+---
+
+## 🚀 使用範例
+
+以下範例展示如何透過 QBridge 建立一個簡單的量子電路，並在 Qiskit 模擬器上執行：
+
+```python
+from qbridge import QuantumCircuit, execute
+from qbridge.backends import QiskitBackend
+
+# 建立一個包含 Hadamard 與 CNOT 的電路
+qc = QuantumCircuit(2)
+qc.h(0)
+qc.cx(0, 1)
+qc.measure_all()
+
+# 指定後端並執行
+backend = QiskitBackend(provider='aer_simulator')
+result = execute(qc, backend, shots=1024)
+
+print(result.get_counts())
 ```
 
-## Project Structure
+### 切換至 Cirq 後端
+
+只需更換後端實例：
+
+```python
+from qbridge.backends import CirqBackend
+
+backend = CirqBackend()
+result = execute(qc, backend, shots=1024)
+```
+
+---
+
+## 📁 專案結構
 
 ```
 qbridge/
-├── src/               # C++ source (quantum gates, measurement, algorithms)
-├── include/           # C++ headers
-├── python/            # Python CLI and visualization
-├── examples/          # Circuit description files
-├── tests/             # Unit tests (C++ + Python)
-├── CMakeLists.txt
+├── qbridge/
+│   ├── core/           # 核心抽象：電路、閘、測量
+│   ├── backends/       # 後端轉接器（Qiskit, Cirq, Braket...）
+│   ├── converters/     # 電路格式轉換器
+│   ├── plugins/        # 擴充套件介面
+│   └── utils/          # 工具函式
+├── tests/              # 單元測試與整合測試
+├── docs/               # 文件與教學
+├── examples/           # 完整使用範例
+├── setup.py
 └── README.md
 ```
 
-## License
+---
 
-MIT
+## 🧪 開發與貢獻
+
+我們歡迎任何形式的貢獻！請參閱 [CONTRIBUTING.md](CONTRIBUTING.md) 瞭解如何參與開發。
+
+### 快速開始開發
+
+```bash
+git clone https://github.com/yourusername/qbridge.git
+cd qbridge
+pip install -e ".[dev]"
+pytest
+```
+
+---
+
+## 📄 授權條款
+
+本專案採用 **MIT 授權** — 詳細內容請參閱 [LICENSE](LICENSE) 檔案。
+
+---
+
+## 🤝 支援與聯繫
+
+- 提交 [Issues](https://github.com/yourusername/qbridge/issues) 回報問題或建議
+- 透過 [Discussions](https://github.com/yourusername/qbridge/discussions) 參與社群討論
+
+---
+
+*Automated by Davin Portfolio Engine*
+```
