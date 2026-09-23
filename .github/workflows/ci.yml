@@ -11,13 +11,43 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
+
+      - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential libeigen3-dev
-      - name: Configure CMake
+          sudo apt-get install -y cmake build-essential
+
+      - name: Install the JavaScriptCore shell
+        continue-on-error: true
+        run: |
+          sudo apt-get install -y libjavascriptcoregtk-4.1-bin \
+            || sudo apt-get install -y libjavascriptcoregtk-4.0-bin
+
+      - name: Configure
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
       - name: Build
-        run: cmake --build build
-      - name: Test
-        run: cd build && ctest --output-on-failure || true
+        run: cmake --build build --parallel
+
+      - name: C++ tests
+        run: ctest --test-dir build --output-on-failure
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Python tests and lint
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest ruff
+          python -m pytest -q
+          python -m ruff check python tests scripts
+
+      - name: Regenerate the reference file
+        run: python scripts/gen_reference.py
+
+      - name: Reference file must be in sync with the engines
+        run: git diff --exit-code docs/reference.json
+
+      - name: Cross-engine parity
+        run: python scripts/check_parity.py --allow-missing-js

@@ -1,0 +1,571 @@
+{
+  "schema": 1,
+  "generated_by": "qbridge 1.0.0 (Python engine)",
+  "generator_command": "python3 scripts/gen_reference.py",
+  "tolerance": 1e-12,
+  "note": "Every amplitude in this file is the result of simulating the circuit on an ideal state vector with the Python engine of this repository. Nothing here was executed on quantum hardware and no number is hard coded.",
+  "parity": {
+    "python": {
+      "status": "pass",
+      "max_delta": 0.0,
+      "note": "the reference file itself is produced by this engine"
+    },
+    "cpp": {
+      "status": "pass",
+      "max_delta": 2.7755575615628914e-17,
+      "binary": "/Users/kedewei/Library/Application Support/com.tencent.mac.marvis/MarvisData/User/oAN1i2Q4OggTWXenZkJ7hAAavTR0/workspace/conv_70e6d88f2a0c431b94bc7353cd2e1980/temp/repos/qbridge/build/qbridge_cli"
+    },
+    "javascript": {
+      "status": "pass",
+      "max_delta": 2.7755575615628914e-17,
+      "engine": "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc"
+    }
+  },
+  "circuits": [
+    {
+      "name": "bell",
+      "title": "Bell pair",
+      "summary": "Hadamard on qubit 0 followed by CNOT. The two qubits are always read as equal, never as different.",
+      "qubits": 2,
+      "gate_count": 2,
+      "source": "# Bell pair: (|00> + |11>) / sqrt(2)\nqubits 2\nh 0\ncx 0 1",
+      "amplitudes": [
+        [
+          0.7071067811865476,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.7071067811865476,
+          0.0
+        ]
+      ],
+      "probabilities": [
+        0.5000000000000001,
+        0.0,
+        0.0,
+        0.5000000000000001
+      ],
+      "support": [
+        {
+          "index": 0,
+          "probability": 0.5000000000000001
+        },
+        {
+          "index": 3,
+          "probability": 0.5000000000000001
+        }
+      ],
+      "findings": [
+        "Outcomes |00> and |11> carry probability 0.5 each; |01> and |10> never appear.",
+        "Either qubit alone reads 0 or 1 with probability 0.5, so the correlation only shows up jointly."
+      ]
+    },
+    {
+      "name": "deutsch_jozsa_balanced",
+      "title": "Deutsch-Jozsa, balanced oracle",
+      "summary": "The oracle xors the parity of all three input qubits onto the ancilla.",
+      "qubits": 4,
+      "gate_count": 9,
+      "source": "# Deutsch-Jozsa with a balanced oracle f(x) = x0.\n# Qubits 0-2 hold the input register, qubit 3 is the ancilla.\n# A balanced oracle must leave zero weight on the all-zero input branch.\nqubits 4\nx 3\nh 0\nh 1\nh 2\nh 3\ncx 0 3\nh 0\nh 1\nh 2",
+      "amplitudes": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.7071067811865477,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          -0.7071067811865477,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "probabilities": [
+        0.0,
+        0.5000000000000002,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.5000000000000002,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "support": [
+        {
+          "index": 1,
+          "probability": 0.5000000000000002
+        },
+        {
+          "index": 9,
+          "probability": 0.5000000000000002
+        }
+      ],
+      "findings": [
+        "Probability of reading 000 on the input register is 0, so the oracle is balanced.",
+        "That is the single-query answer the algorithm is built to give."
+      ]
+    },
+    {
+      "name": "deutsch_jozsa_constant",
+      "title": "Deutsch-Jozsa, constant oracle",
+      "summary": "The oracle leaves the ancilla untouched, so the interference pattern is the opposite one.",
+      "qubits": 4,
+      "gate_count": 8,
+      "source": "# Deutsch-Jozsa with the constant oracle f(x) = 0.\n# Qubits 0-2 hold the input register, qubit 3 is the ancilla.\n# A constant oracle keeps all the weight on the all-zero input branch.\nqubits 4\nx 3\nh 0\nh 1\nh 2\nh 3\nh 0\nh 1\nh 2",
+      "amplitudes": [
+        [
+          0.7071067811865477,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          -0.7071067811865477,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "probabilities": [
+        0.5000000000000002,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.5000000000000002,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "support": [
+        {
+          "index": 0,
+          "probability": 0.5000000000000002
+        },
+        {
+          "index": 8,
+          "probability": 0.5000000000000002
+        }
+      ],
+      "findings": [
+        "Probability of reading 000 on the input register is 1, so the oracle is constant.",
+        "The measured register matches the constant value, which is what the deterministic branch predicts."
+      ]
+    },
+    {
+      "name": "ghz3",
+      "title": "Three-qubit GHZ state",
+      "summary": "Greenberger-Horne-Zeilinger state: three qubits share one joint outcome.",
+      "qubits": 3,
+      "gate_count": 3,
+      "source": "# Three-qubit GHZ state: (|000> + |111>) / sqrt(2)\nqubits 3\nh 0\ncx 0 1\ncx 1 2",
+      "amplitudes": [
+        [
+          0.7071067811865476,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.7071067811865476,
+          0.0
+        ]
+      ],
+      "probabilities": [
+        0.5000000000000001,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.5000000000000001
+      ],
+      "support": [
+        {
+          "index": 0,
+          "probability": 0.5000000000000001
+        },
+        {
+          "index": 7,
+          "probability": 0.5000000000000001
+        }
+      ],
+      "findings": [
+        "Only |000> and |111> survive, 0.5 each; the other six basis states have probability 0."
+      ]
+    },
+    {
+      "name": "grover2",
+      "title": "Grover search, two qubits",
+      "summary": "One amplitude-amplification round with |11> marked as the target.",
+      "qubits": 2,
+      "gate_count": 12,
+      "source": "# Grover search over two qubits with the marked state |11>.\n# One oracle call plus one diffusion step rotates the uniform superposition\n# onto the marked state with probability 1.\nqubits 2\nh 0\nh 1\ncz 0 1\nh 0\nh 1\nx 0\nx 1\ncz 0 1\nx 0\nx 1\nh 0\nh 1",
+      "amplitudes": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          -1.0000000000000002,
+          0.0
+        ]
+      ],
+      "probabilities": [
+        0.0,
+        0.0,
+        0.0,
+        1.0000000000000004
+      ],
+      "support": [
+        {
+          "index": 3,
+          "probability": 1.0000000000000004
+        }
+      ],
+      "findings": [
+        "One Grover iteration moves all probability onto the marked state |11>.",
+        "With two qubits a single iteration is already exact, so the result is 1.0 rather than 0.95."
+      ]
+    },
+    {
+      "name": "qft3",
+      "title": "Quantum Fourier transform, three qubits",
+      "summary": "QFT applied to the basis state |001>, including the final bit-reversal swaps.",
+      "qubits": 3,
+      "gate_count": 8,
+      "source": "# Three-qubit quantum Fourier transform applied to the input state |001>.\n# Only the final swap is needed here because the input register is read in the\n# same bit order the simulator uses.\nqubits 3\nx 0\nh 0\ncp pi/2 1 0\ncp pi/4 2 0\nh 1\ncp pi/2 2 1\nh 2\nswap 0 2",
+      "amplitudes": [
+        [
+          0.35355339059327384,
+          0.0
+        ],
+        [
+          0.35355339059327384,
+          0.0
+        ],
+        [
+          0.35355339059327384,
+          0.0
+        ],
+        [
+          0.35355339059327384,
+          0.0
+        ],
+        [
+          -0.35355339059327384,
+          0.0
+        ],
+        [
+          -0.35355339059327384,
+          0.0
+        ],
+        [
+          -0.35355339059327384,
+          0.0
+        ],
+        [
+          -0.35355339059327384,
+          0.0
+        ]
+      ],
+      "probabilities": [
+        0.12500000000000006,
+        0.12500000000000006,
+        0.12500000000000006,
+        0.12500000000000006,
+        0.12500000000000006,
+        0.12500000000000006,
+        0.12500000000000006,
+        0.12500000000000006
+      ],
+      "support": [
+        {
+          "index": 0,
+          "probability": 0.12500000000000006
+        },
+        {
+          "index": 1,
+          "probability": 0.12500000000000006
+        },
+        {
+          "index": 2,
+          "probability": 0.12500000000000006
+        },
+        {
+          "index": 3,
+          "probability": 0.12500000000000006
+        },
+        {
+          "index": 4,
+          "probability": 0.12500000000000006
+        },
+        {
+          "index": 5,
+          "probability": 0.12500000000000006
+        },
+        {
+          "index": 6,
+          "probability": 0.12500000000000006
+        },
+        {
+          "index": 7,
+          "probability": 0.12500000000000006
+        }
+      ],
+      "findings": [
+        "All eight basis states carry probability 0.125.",
+        "The input state was a computational basis state, so the QFT spreads it uniformly; the phase lives in the amplitudes."
+      ]
+    },
+    {
+      "name": "rotations3",
+      "title": "Rotation gates on three qubits",
+      "summary": "rx, ry and rz on separate qubits, mixed with phases and entangling gates.",
+      "qubits": 3,
+      "gate_count": 13,
+      "source": "# Mixed single-qubit rotations, phases and entangling gates.\n# Used as the \"many small gates\" case in the three-engine parity check.\nqubits 3\nh 0\nh 1\nh 2\nrz pi/3 0\nrx -pi/5 1\nry pi/7 2\nt 0\nsdg 1\np pi/8 2\ncx 0 2\ncz 1 2\nccx 0 1 2\nswap 0 1",
+      "amplitudes": [
+        [
+          0.2602029495784506,
+          -0.05530784429879357
+        ],
+        [
+          -0.05530784429879357,
+          -0.2602029495784506
+        ],
+        [
+          -0.18226208185194698,
+          0.38212040106318457
+        ],
+        [
+          -0.26565147252251026,
+          -0.013922203738174573
+        ],
+        [
+          0.41627286212218506,
+          0.07715161469664208
+        ],
+        [
+          -0.07715161469664208,
+          0.41627286212218506
+        ],
+        [
+          -0.013922203738174573,
+          0.26565147252251026
+        ],
+        [
+          0.38212040106318457,
+          0.18226208185194698
+        ]
+      ],
+      "probabilities": [
+        0.0707645326103053,
+        0.0707645326103053,
+        0.17923546738969484,
+        0.07076453261030527,
+        0.17923546738969479,
+        0.17923546738969479,
+        0.07076453261030527,
+        0.17923546738969484
+      ],
+      "support": [
+        {
+          "index": 0,
+          "probability": 0.0707645326103053
+        },
+        {
+          "index": 1,
+          "probability": 0.0707645326103053
+        },
+        {
+          "index": 2,
+          "probability": 0.17923546738969484
+        },
+        {
+          "index": 3,
+          "probability": 0.07076453261030527
+        },
+        {
+          "index": 4,
+          "probability": 0.17923546738969479
+        },
+        {
+          "index": 5,
+          "probability": 0.17923546738969479
+        },
+        {
+          "index": 6,
+          "probability": 0.07076453261030527
+        },
+        {
+          "index": 7,
+          "probability": 0.17923546738969484
+        }
+      ],
+      "findings": [
+        "Amplitude magnitudes: |000> = 0.071, |001> = 0.071, |010> = 0.179, |011> = 0.071, |100> = 0.179, |101> = 0.179, |110> = 0.071, |111> = 0.179",
+        "Mixing rotations with cz and ccx leaves a distribution that no single-qubit rotation could produce."
+      ]
+    }
+  ]
+}

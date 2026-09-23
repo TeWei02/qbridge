@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QBridge — state-vector simulator</title>
+<meta name="description" content="Run quantum circuits in the browser and compare the JavaScript engine with the C++ and Python engines of the same repository.">
+<meta name="theme-color" content="#0b1220">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <h1>QBridge</h1>
+    <p class="tagline">State-vector simulator. The C++, Python and JavaScript engines in this repository run the same <code>.qc</code> circuits; this page runs the JavaScript one and checks it against the Python reference.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel" aria-labelledby="circuit-heading">
+    <h2 id="circuit-heading">Circuit</h2>
+    <div id="circuit-list" class="chips" role="tablist"></div>
+    <p id="circuit-summary" class="summary"></p>
+    <pre id="circuit-source" class="source"></pre>
+  </section>
+
+  <section class="panel" aria-labelledby="probability-heading">
+    <h2 id="probability-heading">Probability distribution</h2>
+    <div id="chart" class="chart"></div>
+    <ul id="findings" class="findings"></ul>
+  </section>
+
+  <section class="panel" aria-labelledby="amplitude-heading">
+    <h2 id="amplitude-heading">Amplitudes</h2>
+    <table class="amplitudes">
+      <thead>
+        <tr><th>basis</th><th>real</th><th>imaginary</th><th>probability</th></tr>
+      </thead>
+      <tbody id="amplitude-rows"></tbody>
+    </table>
+  </section>
+
+  <section class="panel" aria-labelledby="parity-heading">
+    <h2 id="parity-heading">Cross-engine parity</h2>
+    <p id="status" class="status">loading reference…</p>
+    <ul id="parity" class="parity"></ul>
+  </section>
+
+  <section class="panel" aria-labelledby="custom-heading">
+    <h2 id="custom-heading">Run your own circuit</h2>
+    <p class="summary">Same syntax as the <code>.qc</code> files: <code>qubits N</code>, then one gate per line (<code>h</code>, <code>x</code>, <code>y</code>, <code>z</code>, <code>s</code>, <code>t</code>, <code>p</code>, <code>rx</code>, <code>ry</code>, <code>rz</code>, <code>cx</code>, <code>cz</code>, <code>cp</code>, <code>ccx</code>, <code>swap</code>). Angles accept <code>pi/2</code> style tokens.</p>
+    <textarea id="custom-source" rows="6" spellcheck="false">qubits 2
+h 0
+cx 0 1</textarea>
+    <div class="actions">
+      <button id="run-custom" type="button">Run circuit</button>
+      <span id="custom-error" class="error" role="alert"></span>
+    </div>
+    <div id="custom-chart" class="chart"></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>MIT licensed. Source: <a href="https://github.com/TeWei02/qbridge">github.com/TeWei02/qbridge</a>. Every number on this page comes from simulating the circuit on an ideal state vector — no hardware was used.</p>
+  </div>
+</footer>
+
+<noscript><p class="wrap">This demo runs the simulator in your browser, so JavaScript is required.</p></noscript>
+
+<script src="qbridge.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
