@@ -1,0 +1,74 @@
+name: Release
+
+# 打上 v1.0.0 這種標籤時，建置 sdist + wheel 並發佈到 PyPI。
+# 走 PyPI 的 Trusted Publishing（OIDC），不需要在 repo 裡放 API token；
+# 首次發佈前要到 PyPI 的專案設定把這個 workflow 加為信任的發佈者。
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Tag must match the version in pyproject.toml
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          ver="$(python -c "import tomllib,pathlib;print(tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version'])")"
+          if [ "$tag" != "$ver" ]; then
+            echo "::error::tag v$tag 與 pyproject.toml 的 $ver 不一致"
+            exit 1
+          fi
+
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade build
+          python -m build
+
+      - name: Wheel must ship the example circuits
+        run: |
+          python - <<'PY'
+          import glob, sys, zipfile
+          wheel = sorted(glob.glob("dist/*.whl"))[-1]
+          names = zipfile.ZipFile(wheel).namelist()
+          qc = [n for n in names if n.endswith(".qc")]
+          print(f"{wheel}: {len(qc)} circuits")
+          if len(qc) < 7:
+              sys.exit("範例電路沒有被打進 wheel，安裝後 qbridge --list 會是空的")
+          PY
+
+      - name: Install the wheel and smoke-test the CLI
+        run: |
+          python -m pip install dist/*.whl
+          cd /tmp
+          qbridge --version
+          qbridge --list
+          qbridge --circuit ghz3
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment: pypi
+    permissions:
+      id-token: write        # Trusted Publishing 靠這個換取短效發佈權杖
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1

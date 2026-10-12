@@ -17,7 +17,8 @@
 已完成並通過測試的部分：
 
 - C++17 態向量核心：複數振幅、單量子位閘、受控閘、`ccx`、`swap`、旋轉閘
-- Python 套件（`pip install -e .` 可用）與 `qbridge` 命令列工具
+- Python 套件：`pyproject.toml` 可直接建置 sdist / wheel，附 `qbridge` 命令列工具；
+  範例電路隨套件一起安裝（`share/qbridge/circuits/`），pip 安裝後 `qbridge --list` 立即有內容
 - 瀏覽器端 JavaScript 引擎：無 CDN、無建置步驟、可離線
 - 七個示範電路與跨引擎一致性檢查
 - CMake + CTest（C++）、pytest（Python）、ruff（風格）、GitHub Actions CI
@@ -54,6 +55,20 @@ ctest --test-dir build --output-on-failure
 ```
 
 Python（3.9+，無執行期相依套件）：
+
+裝成套件（會一併帶上七個示範電路，裝完在任何目錄都能直接用）：
+
+```
+pip install "qbridge @ git+https://github.com/TeWei02/qbridge.git"   # 直接從 repo 安裝
+pip install .                                                       # 或是在 clone 出來的目錄裡
+pip install qbridge                                                 # PyPI 發佈後可用，見「發佈」
+
+qbridge --list
+qbridge --circuit ghz3
+qbridge --circuit bell --json
+```
+
+不安裝、直接跑原始碼：
 
 ```
 PYTHONPATH=python python3 -m qbridge.cli --list
@@ -104,6 +119,18 @@ docs/               瀏覽器示範（index.html、app.js、qbridge.js、referen
 scripts/            參考檔產生、跨引擎比對、圖示產生
 tests/              C++ 與 Python 測試
 ```
+
+## 發佈
+
+```
+python3 -m build            # 產生 dist/qbridge-<version>.tar.gz 與 .whl
+```
+
+打上與 `pyproject.toml` 版本一致的標籤（例如 `v1.0.0`）並推送，
+`.github/workflows/release.yml` 會自動建置、驗證 wheel 內含示範電路、實測 CLI，
+再透過 PyPI Trusted Publishing 發佈。第一次發佈前要先到 PyPI 帳號設定新增一個
+trusted publisher，指向這個 repo 的 `release.yml`（環境名稱 `pypi`），之後就不需要
+任何 API token。
 
 ## 授權
 
