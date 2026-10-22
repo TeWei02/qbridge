@@ -77,6 +77,11 @@ def _require(condition: bool, label: str) -> None:
         )
 
 
+def stable(value: float) -> float:
+    """Round to 15 decimal places so the committed file is stable across platforms and numpy versions."""
+    return round(value, 15)
+
+
 def support_of(probabilities: list[float]) -> list[dict]:
     return [
         {"index": index, "probability": probability}
@@ -155,9 +160,9 @@ def collect() -> list[dict]:
                 "qubits": circuit.qubits,
                 "gate_count": len(circuit.gates),
                 "source": path.read_text(encoding="utf-8").strip(),
-                "amplitudes": [[value.real, value.imag] for value in state.amplitudes],
-                "probabilities": probabilities,
-                "support": support_of(probabilities),
+                "amplitudes": [[stable(value.real), stable(value.imag)] for value in state.amplitudes],
+                "probabilities": [stable(p) for p in probabilities],
+                "support": support_of([stable(p) for p in probabilities]),
                 "findings": findings_for(path.stem, probabilities),
             }
         )
@@ -187,6 +192,13 @@ def parity_record(entries: list[dict], arguments: argparse.Namespace) -> dict:
             record[engine] = {"status": "not measured", "note": "generated with --no-external"}
         return record
 
+    def _portable_path(path: Path) -> str:
+        """Store paths relative to the repo root so the file is machine-independent."""
+        try:
+            return str(path.resolve().relative_to(ROOT))
+        except ValueError:
+            return path.name
+
     binary = Path(arguments.cpp)
     try:
         cpp_results = check_parity.cpp_results(binary, entries)
@@ -197,7 +209,7 @@ def parity_record(entries: list[dict], arguments: argparse.Namespace) -> dict:
     else:
         worst = measure(entries, cpp_results)
         _require(worst <= TOLERANCE, f"C++ engine parity ({worst:.3e})")
-        record["cpp"] = {"status": "pass", "max_delta": worst, "binary": str(binary)}
+        record["cpp"] = {"status": "pass", "max_delta": worst, "binary": _portable_path(binary)}
 
     try:
         jsc = check_parity.find_jsc(arguments.jsc)
@@ -207,7 +219,7 @@ def parity_record(entries: list[dict], arguments: argparse.Namespace) -> dict:
     else:
         worst = measure(entries, js)
         _require(worst <= TOLERANCE, f"JavaScript engine parity ({worst:.3e})")
-        record["javascript"] = {"status": "pass", "max_delta": worst, "engine": str(jsc)}
+        record["javascript"] = {"status": "pass", "max_delta": worst, "engine": Path(jsc).name}
 
     return record
 
