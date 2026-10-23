@@ -2,6 +2,17 @@
 
 **Language:** [![English](https://img.shields.io/badge/English-English-blue?style=flat-square)](README.en.md) [![中文](https://img.shields.io/badge/%E4%B8%AD%E6%96%87-%E4%B8%AD%E6%96%87%E7%89%88-blue?style=flat-square)](README.md)
 
+<div align="center">
+
+# Demo Preview
+
+Quantum computing simulation across languages: one `.qc` circuit drives C++17 / Python / JavaScript engines with amplitudes agreeing to 1e-12 (recomputed live in the browser with deviation shown).
+
+<video controls width="640" src="assets/demo-preview.webm"></video>
+
+</div>
+
+
 [![C++](https://img.shields.io/badge/C%2B%2B-17-%2300599C?logo=c%2B%2B)](https://isocpp.org/)
 [![Python](https://img.shields.io/badge/Python-3-%233776AB?logo=python)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
